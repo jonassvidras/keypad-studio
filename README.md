@@ -4,6 +4,10 @@
 
 <p align="center">Your tiny keypad, your way.<br>Set up its keys, knob, and lights in the browser—without the vendor app.</p>
 
+<p align="center"><a href="assets/studio.png"><img src="assets/studio.png" width="900" alt="Keypad Studio showing its interactive three-key keypad and action editor"></a></p>
+
+<p align="center"><sub>Pick a key or knob action, then assign what it does. Click the preview to see it full-size.</sub></p>
+
 ## Get started
 
 1. Open Keypad Studio in desktop Chrome or Edge. The public app link will be added when hosting is ready.

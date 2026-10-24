@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; connect-src 'none'; style-src 'self'; script-src 'self'; object-src 'none'; base-uri 'none'">
+  <meta name="theme-color" content="#10191d">
+  <title>Keypad Studio</title>
+  <link rel="icon" href="icon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="open.css">
+  <script type="module" src="app.js"></script>
+</head>
+<body>
+<div class="shell">
+  <aside class="sidebar">
+    <a class="brand" href="#"><span class="brand-icon" aria-hidden="true">▦</span><span>keypad<span class="brand-light">studio</span></span></a>
+    <div class="side-label">YOUR WORKSPACE</div>
+    <nav aria-label="Workspace">
+      <button class="nav-item active" data-view="configure"><span aria-hidden="true">⌘</span> Configure</button>
+      <button class="nav-item" data-view="lighting"><span aria-hidden="true">☼</span> Lighting</button>
+      <button class="nav-item" data-view="profiles"><span aria-hidden="true">▤</span> Profiles</button>
+      <button class="nav-item" data-view="test"><span aria-hidden="true">⌁</span> Test keypad</button>
+    </nav>
+    <div class="side-device"><div class="mini-device" aria-hidden="true"><i></i><i></i><i></i><b></b></div><strong>Mini Keypad</strong><span>3 keys · 1 rotary knob</span><small>WebHID · direct USB</small></div>
+    <div class="privacy"><span class="privacy-dot"></span> Local by design<p>Your profiles stay in this browser.<br>No account. No cloud.</p></div>
+  </aside>
+  <div class="workspace">
+    <header class="topbar"><div class="breadcrumb">Workspace <span>/</span> <strong id="view-name">Configure</strong></div><div class="connection"><span id="connection-state" class="connection-state">Not connected</span><button id="connect" class="primary small">Connect keypad <span aria-hidden="true">↗</span></button><button id="disconnect" class="quiet small" hidden>Disconnect</button></div></header>
+    <main>
+      <div id="notice" class="notice" role="status" hidden></div>
+      <section id="view-configure" class="view">
+        <div class="page-heading"><div><div class="eyebrow">MAKE IT YOURS</div><h1>Small keypad. Big possibilities.</h1><p>Choose a control. Give it a job. Make it muscle memory.</p></div><span class="version-tag">MINI / 03</span></div>
+        <div class="draft-banner"><span class="info-icon">i</span><p><strong id="profile-caption">Basic keys</strong> is a local draft. Connect a keypad to see what it supports; no settings have been sent.</p></div>
+        <div class="config-grid">
+          <section class="panel device-panel" aria-labelledby="device-heading">
+            <div class="panel-heading"><h2 id="device-heading">Your controls</h2><div class="actions"><button id="advanced-toggle" class="quiet small" hidden>Show experimental options</button><label id="layer-picker" class="layer-picker" hidden>Editing <select id="layer" aria-label="Editing layer"><option value="1">Layer 1</option><option value="2">Layer 2 · experimental</option><option value="3">Layer 3 · experimental</option></select></label></div></div>
+            <p id="layer-note" class="subtle">Select a key or a knob action to edit its assignment.</p>
+            <div class="hardware-stage"><div class="cable" aria-hidden="true"></div><div class="hardware">
+              <div class="hardware-topline"><span>MINI</span><span class="hardware-led"></span></div>
+              <div class="hardware-controls"><div class="key-bank">
+                <button class="keycap" data-target="1" aria-label="Configure Key 1"><span class="control-number">01</span><strong id="key-label-1">A</strong><small>KEY 1</small></button>
+                <button class="keycap" data-target="2" aria-label="Configure Key 2"><span class="control-number">02</span><strong id="key-label-2">B</strong><small>KEY 2</small></button>
+                <button class="keycap" data-target="3" aria-label="Configure Key 3"><span class="control-number">03</span><strong id="key-label-3">C</strong><small>KEY 3</small></button>
+              </div><div class="knob-unit"><button class="knob" data-target="14" aria-label="Configure Knob push"><span class="knob-marker"></span><span>PUSH</span></button><div class="turn-controls"><button data-target="13" aria-label="Configure Knob left">↶ <span>Left</span></button><button data-target="15" aria-label="Configure Knob right"><span>Right</span> ↷</button></div></div></div>
+              <div class="hardware-bottomline"><span>PROGRAMMABLE CONTROLLER</span><span>● ● ●</span></div>
+            </div></div>
+            <div id="assignment-list" class="assignment-list"></div>
+            <div class="panel-foot"><span id="configured-count">6 actions in this draft</span><div class="actions"><button id="read-open" class="secondary small" hidden>Import device settings</button><button id="save-layer" class="secondary small">Save configured actions</button></div></div>
+          </section>
+          <section class="panel editor" aria-labelledby="editor-title">
+            <div class="editor-top"><span class="eyebrow">ASSIGNMENT</span><span id="write-state" class="pill">Draft</span></div>
+            <h2 id="editor-title">Key 1</h2><p class="subtle">What should this control do?</p>
+            <label class="field">Action type<select id="action-type"><option value="keyboard">Key or shortcut</option><option value="modifier">Modifier keys only</option><option id="sequence-option" value="sequence" hidden>Key sequence · experimental</option><option value="media">Media control</option><option value="mouse">Mouse action</option><option value="unset">Leave unchanged</option></select></label>
+            <div id="keyboard-editor"><div class="field-heading"><span id="keys-heading">Key</span><button id="capture" class="text-button">Record shortcut</button></div><div id="key-steps"></div><button id="add-step" class="secondary small" hidden>+ Add key</button><p id="sequence-help" class="hint" hidden>Up to five key steps. Timing and sequence behavior are set by the firmware; custom delays are unavailable.</p><p id="capture-hint" class="hint">Choose a key and optional modifiers, or record a shortcut.</p></div>
+            <label id="media-editor" class="field" hidden>Media action<select id="media-action"></select></label>
+            <div id="mouse-editor" hidden><label class="field">Mouse action<select id="mouse-action"></select></label></div>
+            <p id="unset-help" class="hint" hidden>This action will be skipped when saving the layer. This does not disable the physical control.</p>
+            <div id="feature-note" class="feature-note"></div>
+            <div class="assignment-preview"><span>ON THIS CONTROL</span><strong id="assignment-preview">A</strong></div>
+            <button id="save-action" class="primary full">Save Key 1 to keypad <span aria-hidden="true">↗</span></button><p class="hint centered">Edits stay in your draft until you save to the keypad.</p>
+          </section>
+        </div>
+        <div class="workflow"><div><span>01</span><strong>Choose a control</strong><p>Three keys. Three knob actions.</p></div><div><span>02</span><strong>Make an assignment</strong><p>A shortcut, a media control, your choice.</p></div><div><span>03</span><strong>Save and go</strong><p>The keypad keeps working with this page closed.</p></div></div>
+      </section>
+      <section id="view-lighting" class="view" hidden>
+        <div class="page-heading"><div><div class="eyebrow">A LITTLE PERSONALITY</div><h1>Set the mood.</h1><p>Connect your keypad to see its available lighting effects.</p></div><span class="version-tag">LIGHT / --</span></div>
+        <div id="lighting-connect" class="panel" role="status"><h2>Connect to choose an effect</h2><p>Studio shows the lighting modes supported by the detected firmware. Selecting an effect never changes the keypad until you save it.</p></div>
+        <div id="stock-lighting-options" class="lighting-options">
+          <button class="light-card" data-mode="0" aria-pressed="false"><div class="light-demo off" aria-hidden="true"><i></i><i></i><i></i></div><span class="eyebrow">MODE 0</span><h2>Lights out</h2><p>A clean, distraction-free desk.<br>All LEDs off.</p></button>
+          <button class="light-card" data-mode="1" aria-pressed="false"><div class="light-demo breathe" aria-hidden="true"><i></i><i></i><i></i></div><span class="eyebrow">MODE 1</span><h2>Last-key breathing</h2><p>The last key you press pulses gently. Each press changes its color.</p><small>Knob push stops the effect.</small></button>
+          <button class="light-card" data-mode="2" aria-pressed="false"><div class="light-demo chase" aria-hidden="true"><i></i><i></i><i></i></div><span class="eyebrow">MODE 2</span><h2>Color chase</h2><p>Light travels across all three keys, changing color on every pass.</p><small>Knob actions leave the effect running.</small></button>
+        </div>
+        <div id="open-lighting-options" class="lighting-options" hidden></div>
+        <div id="open-lighting-controls" class="panel open-lighting-controls" hidden><label>Brightness <strong id="open-brightness-value">48 / 255</strong><input id="open-brightness" type="range" min="0" max="255" value="48"></label><div class="open-colors"><label>Key 1 <input id="open-color-0" type="color" value="#0078ff"></label><label>Key 2 <input id="open-color-1" type="color" value="#b400c8"></label><label>Key 3 <input id="open-color-2" type="color" value="#ff4600"></label></div><p class="hint">Colors are the palette for static, breathing, wave, comet, reactive, ripple, starlight, and alternating effects.</p></div>
+        <div id="lighting-footer" class="panel lighting-footer" hidden><div><h2 id="lighting-selection">Color chase selected</h2><p id="lighting-description">Illustrations are previews. The keypad chooses the colors and timing.</p></div><button id="save-lighting" class="primary">Save lighting to keypad</button></div>
+        <p id="lighting-help" class="hint">Stock firmware offers three fixed modes and does not expose custom colors, brightness or speed. Your selected mode is a draft until saved.</p>
+      </section>
+      <section id="view-profiles" class="view" hidden>
+        <div class="page-heading"><div><div class="eyebrow">YOUR OWN WAY OF WORKING</div><h1>A setup for every flow.</h1><p>Save your drafts, switch projects, and keep a portable copy.</p></div></div>
+        <div class="profiles-grid"><section class="panel"><h2>Profile library</h2><label class="field">Current profile<select id="profile-select"></select></label><label class="field">Profile name<input id="profile-name" maxlength="60" autocomplete="off"></label><div class="actions"><button id="rename-profile" class="secondary">Rename</button><button id="duplicate-profile" class="secondary">Duplicate</button><button id="new-profile" class="secondary">New blank profile</button><button id="delete-profile" class="quiet">Delete profile</button></div><div id="delete-confirm" class="delete-confirm" hidden><p>Delete <strong id="delete-confirm-name"></strong> from this browser? This does not change the keypad.</p><div class="actions"><button id="confirm-delete" class="secondary">Yes, delete</button><button id="cancel-delete" class="quiet">Cancel</button></div></div><hr><div class="actions"><button id="export-profile" class="primary">Export profile</button><button id="import-profile" class="secondary">Import profile</button><input type="file" id="profile-file" accept=".json,application/json" hidden></div><p class="hint">Profiles are browser-local drafts. Switching or exporting never changes the keypad; use a Save button to apply settings. Exports are not firmware backups.</p></section>
+        <section class="panel"><span class="eyebrow">START SOMEWHERE GOOD</span><h2>Starter layouts</h2><p class="subtle">Click once to create a starter profile; click again to reopen it. Your edits stay intact.</p><div class="preset-list"><button data-preset="editing"><strong>Everyday editing <span>↗</span></strong><small>Copy · Paste · Undo / scroll & middle click</small></button><button data-preset="media"><strong>Media desk <span>↗</span></strong><small>Previous · Play/pause · Next / volume & mute</small></button><button data-preset="letters"><strong>Basic keys <span>↗</span></strong><small>A · B · C / D · E · F</small></button></div><p id="preset-note" class="feature-note">Starter layouts are drafts. Connect a keypad to see which actions its firmware supports.</p></section></div>
+      </section>
+      <section id="view-test" class="view" hidden>
+        <div class="page-heading"><div><div class="eyebrow">TRUST, THEN VERIFY</div><h1>Test your keypad.</h1><p>Try your keys here after saving an assignment.</p></div></div>
+        <section class="panel"><div id="test-pad" tabindex="0" role="region" aria-label="Keypad input test area"><span class="eyebrow">CLICK HERE, THEN USE YOUR KEYPAD</span><strong id="test-value">Ready when you are.</strong><span id="test-detail">Key presses and wheel movements appear here.</span></div><div id="test-history" class="test-history" aria-live="polite"></div><p class="hint">Only input in this test area is logged. Any keyboard can produce these events; your operating system may handle media keys or reserved shortcuts before the browser sees them. Tab leaves the test area.</p></section>
+        <details class="panel diagnostics"><summary>Advanced diagnostics</summary><p class="hint">Only share an exported log after reviewing it. It may contain device details and key-test activity.</p><p id="device-summary" class="subtle">Connect your keypad to inspect its USB interface.</p><div class="actions"><button id="export-diagnostics" class="secondary small">Export diagnostics</button><button id="clear-log" class="quiet small">Clear log</button></div><pre id="activity-log">No activity yet.</pre><details><summary>Technical device details</summary><pre id="descriptors">No device selected.</pre></details></details>
+      </section>
+      <footer><span>KEYPAD STUDIO <b>·</b> Made for your mini keypad</span><span>Local profiles. Direct USB. No vendor software.</span></footer>
+    </main>
+  </div>
+</div>
+<noscript>This app needs JavaScript for its editor and WebHID connection.</noscript>
+</body>
+</html>

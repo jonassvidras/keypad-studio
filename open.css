@@ -1,0 +1,31 @@
+.open-lighting-controls{margin-top:22px;display:grid;gap:18px}
+.open-lighting-controls>label{display:grid;gap:10px;font-size:12px}
+.open-lighting-controls strong{font-size:11px;color:var(--mint)}
+.open-colors{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.open-colors label{font-size:11px;color:var(--muted)}
+.open-colors input{height:46px;padding:5px;margin-top:8px}
+.open-light-card{padding:17px}
+.open-light-card .light-demo{height:88px}
+.open-light-card .light-demo i{width:30px;height:35px}
+.open-light-card h2{margin:0;font-size:15px}
+.open-demo i{background:#2c393f}
+.open-mode-1 i,.open-mode-11 i{background:#48a4c7;box-shadow:0 4px #10191d,0 0 17px #48a4c780}
+.open-mode-2 i,.open-mode-9 i{animation:open-rainbow 3s linear infinite}
+.open-mode-2 i:nth-child(2){animation-delay:-1s}
+.open-mode-2 i:nth-child(3){animation-delay:-2s}
+.open-mode-3 i{animation:open-breathe 2.8s ease-in-out infinite}
+.open-mode-4 i{animation:open-breathe 2.8s ease-in-out infinite}
+.open-mode-4 i:nth-child(2){animation-delay:-.9s}
+.open-mode-4 i:nth-child(3){animation-delay:-1.8s}
+.open-mode-5 i,.open-mode-8 i{animation:open-spark 2.1s ease-in-out infinite}
+.open-mode-5 i:nth-child(2),.open-mode-8 i:nth-child(3){animation-delay:-.7s}
+.open-mode-5 i:nth-child(3),.open-mode-8 i:nth-child(1){animation-delay:-1.4s}
+.open-mode-6 i,.open-mode-7 i{animation:open-spark 3s ease-out infinite}
+.open-mode-6 i:nth-child(2),.open-mode-7 i:nth-child(2){animation-delay:-1s}
+.open-mode-6 i:nth-child(3),.open-mode-7 i:nth-child(3){animation-delay:-2s}
+.open-mode-10 i{animation:open-spark 1.4s steps(2) infinite}
+.open-mode-10 i:nth-child(2){animation-delay:-.7s}
+@keyframes open-breathe{0%,100%{opacity:.2}50%{opacity:1;background:#72d7ae;box-shadow:0 4px #10191d,0 0 20px #72d7ae}}
+@keyframes open-spark{0%,100%{background:#2c393f;box-shadow:0 4px #10191d}25%{background:#72d7ae;box-shadow:0 4px #10191d,0 0 22px #72d7ae}}
+@keyframes open-rainbow{0%{background:#e77782}33%{background:#78ca9d}66%{background:#7da9eb}100%{background:#e77782}}
+@media(max-width:650px){.open-colors{grid-template-columns:1fr 1fr 1fr}}

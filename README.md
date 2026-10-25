@@ -2,7 +2,7 @@
 
 <h1 align="center">Keypad Studio</h1>
 
-<p align="center">Your tiny keypad, your way.<br>Set up its keys, knob, and lights in the browser—without the vendor app.</p>
+<p align="center">Configure keys, knob actions, lighting, and local profiles for the three-key keypad in your browser.</p>
 
 <p align="center"><a href="https://jonassvidras.github.io/keypad-studio/"><strong>Open Keypad Studio</strong></a></p>
 
@@ -29,7 +29,7 @@ Saved settings stay on the keypad when you close the page. The browser may conne
 
 Studio detects the firmware after connecting. The original firmware works without modification. Studio is designed for the tested three-key, clickable-knob CH552G keypad; look-alike boards may differ. **Studio does not flash firmware.**
 
-## Private by design
+## Local profiles and device saves
 
 Profiles stay in your browser. Connecting may read device settings, but it does not change them; only a **Save** button writes your changes. There is no account or cloud service. Export a profile if you want a portable copy; it is not a firmware backup.
 

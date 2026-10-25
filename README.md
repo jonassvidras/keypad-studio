@@ -6,9 +6,11 @@
 
 <p align="center"><a href="https://jonassvidras.github.io/keypad-studio/"><strong>Open Keypad Studio</strong></a></p>
 
-<p align="center"><a href="assets/studio.png"><img src="assets/studio.png" width="900" alt="Keypad Studio showing its interactive three-key keypad and action editor"></a></p>
+| The keypad | Keypad Studio |
+| :---: | :---: |
+| [<img src="assets/keypad-photo.png" width="380" alt="Three-key keypad with rotary knob and green lighting">](assets/keypad-photo.png) | [<img src="assets/studio.png" width="380" alt="Keypad Studio showing the keypad and action editor">](assets/studio.png) |
 
-<p align="center"><sub>Pick a key or knob action, then assign what it does. Click the preview to see it full-size.</sub></p>
+<p align="center"><sub>The tested keypad and its browser configurator. Click either image to enlarge.</sub></p>
 
 ## Get started
 

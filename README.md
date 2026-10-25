@@ -8,7 +8,7 @@
 
 | The keypad | Keypad Studio |
 | :---: | :---: |
-| [<img src="assets/keypad-photo.png" width="380" alt="Three-key keypad with rotary knob and green lighting">](assets/keypad-photo.png) | [<img src="assets/studio.png" width="380" alt="Keypad Studio showing the keypad and action editor">](assets/studio.png) |
+| [<img src="assets/keypad-photo.png" width="380" alt="Three-key keypad with rotary knob and green lighting">](assets/keypad-photo.png) | [<img src="assets/studio.png" width="380" alt="Keypad Studio Configure view with keypad, assignment editor, and appearance controls">](assets/studio.png) |
 
 <p align="center"><sub>The tested keypad and its browser configurator. Click either image to enlarge.</sub></p>
 

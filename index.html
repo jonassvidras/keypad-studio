@@ -4,92 +4,120 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <meta http-equiv="Content-Security-Policy" content="default-src 'self'; connect-src 'none'; style-src 'self'; script-src 'self'; object-src 'none'; base-uri 'none'">
-  <meta name="theme-color" content="#10191d">
+  <meta name="color-scheme" content="light dark">
+  <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#161617" media="(prefers-color-scheme: dark)">
+  <meta name="description" content="A simple, private workspace for your three-key keypad. Configure keys, knob actions, lighting, and local profiles.">
   <title>Keypad Studio</title>
   <link rel="icon" href="icon.svg" type="image/svg+xml">
+  <script src="appearance.js"></script>
   <link rel="stylesheet" href="style.css">
-  <link rel="stylesheet" href="open.css">
   <script type="module" src="app.js"></script>
 </head>
 <body>
+<a class="skip-link" href="#main-content">Skip to workspace</a>
 <div class="shell">
-  <aside class="sidebar">
-    <a class="brand" href="#"><span class="brand-icon" aria-hidden="true">▦</span><span>keypad<span class="brand-light">studio</span></span></a>
-    <div class="side-label">YOUR WORKSPACE</div>
-    <nav aria-label="Workspace">
-      <button class="nav-item active" data-view="configure"><span aria-hidden="true">⌘</span> Configure</button>
-      <button class="nav-item" data-view="lighting"><span aria-hidden="true">☼</span> Lighting</button>
-      <button class="nav-item" data-view="profiles"><span aria-hidden="true">▤</span> Profiles</button>
-      <button class="nav-item" data-view="test"><span aria-hidden="true">⌁</span> Test keypad</button>
-    </nav>
-    <div class="side-device"><div class="mini-device" aria-hidden="true"><i></i><i></i><i></i><b></b></div><strong>Mini Keypad</strong><span>3 keys · 1 rotary knob</span><small>WebHID · direct USB</small></div>
-    <div class="privacy"><span class="privacy-dot"></span> Local by design<p>Your profiles stay in this browser.<br>No account. No cloud.</p></div>
+  <aside class="sidebar" aria-label="Studio sidebar">
+    <a class="brand" href="./index.html" aria-label="Keypad Studio home">
+      <svg class="brand-mark" viewBox="0 0 40 40" aria-hidden="true"><rect width="40" height="40" rx="11" fill="currentColor"/><g fill="none" stroke="var(--bg)" stroke-width="1.8"><rect x="8" y="15" width="7" height="12" rx="2"/><rect x="18" y="15" width="7" height="12" rx="2"/><circle cx="31" cy="18.5" r="3.5"/></g></svg>
+      <span class="brand-word">keypad<span class="brand-light"> studio</span></span>
+    </a>
+    <div>
+      <div class="side-label">Workspace</div>
+      <nav aria-label="Workspace">
+        <button class="nav-item active" data-view="configure" aria-current="page"><svg class="od-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true"><rect x="3" y="3" width="7" height="7" rx="2"/><rect x="14" y="3" width="7" height="7" rx="2"/><rect x="3" y="14" width="7" height="7" rx="2"/><rect x="14" y="14" width="7" height="7" rx="2"/></svg><span>Configure</span><span class="nav-indicator" aria-hidden="true"></span></button>
+        <button class="nav-item" data-view="lighting"><svg class="od-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2m0 16v2M2 12h2m16 0h2M5 5l1.5 1.5m11 11L19 19M5 19l1.5-1.5m11-11L19 5"/></svg><span>Lighting</span><span class="nav-indicator" aria-hidden="true"></span></button>
+        <button class="nav-item" data-view="profiles"><svg class="od-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M8 8h8M8 12h8M8 16h5"/></svg><span>Profiles</span><span class="nav-indicator" aria-hidden="true"></span></button>
+        <button class="nav-item" data-view="test"><svg class="od-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true"><path d="M3 12h4l3-7 4 14 3-7h4"/></svg><span>Test keypad</span><span class="nav-indicator" aria-hidden="true"></span></button>
+      </nav>
+    </div>
+    <div class="sidebar-bottom">
+      <div class="side-device"><div class="mini-device" aria-hidden="true"><i></i><i></i><i></i><b></b></div><div class="od-field"><strong>Mini Keypad</strong><span>3 keys · 1 rotary knob</span><small>Direct USB connection</small></div></div>
+      <div class="privacy"><svg class="od-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true"><rect x="5" y="10" width="14" height="11" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3m-4 5v2"/></svg><div><span>Local profiles</span><p>Profiles are stored in this browser.<br>No account is required.</p></div></div>
+    </div>
   </aside>
   <div class="workspace">
-    <header class="topbar"><div class="breadcrumb">Workspace <span>/</span> <strong id="view-name">Configure</strong></div><div class="connection"><span id="connection-state" class="connection-state">Not connected</span><button id="connect" class="primary small">Connect keypad <span aria-hidden="true">↗</span></button><button id="disconnect" class="quiet small" hidden>Disconnect</button></div></header>
-    <main>
-      <div id="notice" class="notice" role="status" hidden></div>
-      <section id="view-configure" class="view">
-        <div class="page-heading"><div><div class="eyebrow">MAKE IT YOURS</div><h1>Small keypad. Big possibilities.</h1><p>Choose a control. Give it a job. Make it muscle memory.</p></div><span class="version-tag">MINI / 03</span></div>
-        <div class="draft-banner"><span class="info-icon">i</span><p><strong id="profile-caption">Basic keys</strong> is a local draft. Connect a keypad to see what it supports; no settings have been sent.</p></div>
+    <header class="topbar">
+      <div class="breadcrumb"><span>Workspace</span><svg class="od-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true"><path d="m9 5 7 7-7 7"/></svg><strong id="view-name">Configure</strong></div>
+      <div class="topbar-actions">
+        <div class="appearance-switch" role="group" aria-label="Appearance">
+          <button type="button" data-appearance="light" aria-pressed="false">Light</button>
+          <button type="button" data-appearance="dark" aria-pressed="false">Dark</button>
+          <button type="button" data-appearance="system" aria-pressed="true" title="Follow your system setting">System</button>
+        </div>
+        <div class="connection"><span id="connection-state" class="connection-state" role="status">Not connected</span><button id="connect" class="primary small"><svg class="od-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true"><path d="M12 21V3m-3 3 3-3 3 3M12 16l-5-4V8m5 10 5-4v-4"/><circle cx="7" cy="6.5" r="1.5"/><path d="M15.5 7h3v3h-3z"/></svg>Connect keypad</button><button id="disconnect" class="quiet small" hidden>Disconnect</button></div>
+      </div>
+    </header>
+    <main id="main-content" tabindex="-1">
+      <div id="notice" class="notice" role="status" aria-live="polite" hidden></div>
+      <section id="view-configure" class="view" aria-labelledby="configure-heading">
+        <div class="page-heading"><div><h1 id="configure-heading">Configure your keypad</h1><p>Assign actions to keys and knob controls.</p></div><span class="version-tag">MINI KEYPAD / 03</span></div>
+        <div class="draft-banner"><svg class="od-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 11v5m0-9v.1"/></svg><p><strong id="profile-caption">Basic keys</strong> is a local draft. Connect a keypad to see what it supports; no settings have been sent.</p></div>
         <div class="config-grid">
           <section class="panel device-panel" aria-labelledby="device-heading">
-            <div class="panel-heading"><h2 id="device-heading">Your controls</h2><div class="actions"><button id="advanced-toggle" class="quiet small" hidden>Show experimental options</button><label id="layer-picker" class="layer-picker" hidden>Editing <select id="layer" aria-label="Editing layer"><option value="1">Layer 1</option><option value="2">Layer 2 · experimental</option><option value="3">Layer 3 · experimental</option></select></label></div></div>
+            <div class="panel-heading"><h2 id="device-heading">Your keypad</h2><span class="eyebrow">3 keys + 1 knob</span><div class="actions"><button id="advanced-toggle" class="quiet small" hidden>Show experimental options</button><label id="layer-picker" class="layer-picker" hidden>Editing <select id="layer" aria-label="Editing layer"><option value="1">Layer 1</option><option value="2">Layer 2 · experimental</option><option value="3">Layer 3 · experimental</option></select></label></div></div>
             <p id="layer-note" class="subtle">Select a key or a knob action to edit its assignment.</p>
-            <div class="hardware-stage"><div class="cable" aria-hidden="true"></div><div class="hardware">
-              <div class="hardware-topline"><span>MINI</span><span class="hardware-led"></span></div>
-              <div class="hardware-controls"><div class="key-bank">
-                <button class="keycap" data-target="1" aria-label="Configure Key 1"><span class="control-number">01</span><strong id="key-label-1">A</strong><small>KEY 1</small></button>
-                <button class="keycap" data-target="2" aria-label="Configure Key 2"><span class="control-number">02</span><strong id="key-label-2">B</strong><small>KEY 2</small></button>
-                <button class="keycap" data-target="3" aria-label="Configure Key 3"><span class="control-number">03</span><strong id="key-label-3">C</strong><small>KEY 3</small></button>
-              </div><div class="knob-unit"><button class="knob" data-target="14" aria-label="Configure Knob push"><span class="knob-marker"></span><span>PUSH</span></button><div class="turn-controls"><button data-target="13" aria-label="Configure Knob left">↶ <span>Left</span></button><button data-target="15" aria-label="Configure Knob right"><span>Right</span> ↷</button></div></div></div>
-              <div class="hardware-bottomline"><span>PROGRAMMABLE CONTROLLER</span><span>● ● ●</span></div>
-            </div></div>
+            <div class="hardware-stage">
+              <div class="hardware" aria-label="Interactive keypad diagram">
+                <div class="hardware-topline"><span>MINI / 03</span><span class="hardware-led" aria-hidden="true"></span></div>
+                <div class="hardware-controls"><div class="key-bank">
+                  <button class="keycap" data-target="1" aria-label="Configure Key 1" aria-pressed="true"><span class="control-number">01</span><strong id="key-label-1">A</strong><small>KEY 1</small></button>
+                  <button class="keycap" data-target="2" aria-label="Configure Key 2" aria-pressed="false"><span class="control-number">02</span><strong id="key-label-2">B</strong><small>KEY 2</small></button>
+                  <button class="keycap" data-target="3" aria-label="Configure Key 3" aria-pressed="false"><span class="control-number">03</span><strong id="key-label-3">C</strong><small>KEY 3</small></button>
+                </div><div class="knob-unit"><button class="knob" data-target="14" aria-label="Configure Knob push" aria-pressed="false"><span class="knob-marker" aria-hidden="true"></span><span>PUSH</span></button><div class="turn-controls"><button data-target="13" aria-label="Configure Knob left" aria-pressed="false"><svg class="od-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true"><path d="M4 10a8 8 0 1 1 2 8M4 4v6h6"/></svg></button><button data-target="15" aria-label="Configure Knob right" aria-pressed="false"><svg class="od-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true"><path d="M20 10a8 8 0 1 0-2 8m2-14v6h-6"/></svg></button></div></div></div>
+                <div class="hardware-bottomline"><span>PROGRAMMABLE CONTROLLER</span><span>● ● ●</span></div>
+              </div>
+              <span class="stage-caption"><svg class="od-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true"><path d="m5 3 14 9-7 1-3 7z"/></svg>Select a control to customize its action</span>
+            </div>
+            <div class="assignments-heading"><h3>Assignments</h3><span>Current draft</span></div>
             <div id="assignment-list" class="assignment-list"></div>
-            <div class="panel-foot"><span id="configured-count">6 actions in this draft</span><div class="actions"><button id="read-open" class="secondary small" hidden>Import device settings</button><button id="save-layer" class="secondary small">Save configured actions</button></div></div>
+            <div class="panel-foot"><span id="configured-count">6 of 6 actions configured</span><div class="actions"><button id="read-open" class="secondary small" hidden>Import device settings</button><button id="save-layer" class="secondary small" disabled>Save configured actions</button></div></div>
           </section>
           <section class="panel editor" aria-labelledby="editor-title">
-            <div class="editor-top"><span class="eyebrow">ASSIGNMENT</span><span id="write-state" class="pill">Draft</span></div>
-            <h2 id="editor-title">Key 1</h2><p class="subtle">What should this control do?</p>
+            <button type="button" id="back-to-keypad" class="text-button editor-back">Back to keypad</button>
+            <div class="editor-top"><span class="eyebrow">Edit assignment</span><span id="write-state" class="pill">Draft</span></div>
+            <h2 id="editor-title">Key 1</h2><p class="subtle">Choose what happens when you press.</p>
             <label class="field">Action type<select id="action-type"><option value="keyboard">Key or shortcut</option><option value="modifier">Modifier keys only</option><option id="sequence-option" value="sequence" hidden>Key sequence · experimental</option><option value="media">Media control</option><option value="mouse">Mouse action</option><option value="unset">Leave unchanged</option></select></label>
             <div id="keyboard-editor"><div class="field-heading"><span id="keys-heading">Key</span><button id="capture" class="text-button">Record shortcut</button></div><div id="key-steps"></div><button id="add-step" class="secondary small" hidden>+ Add key</button><p id="sequence-help" class="hint" hidden>Up to five key steps. Timing and sequence behavior are set by the firmware; custom delays are unavailable.</p><p id="capture-hint" class="hint">Choose a key and optional modifiers, or record a shortcut.</p></div>
             <label id="media-editor" class="field" hidden>Media action<select id="media-action"></select></label>
             <div id="mouse-editor" hidden><label class="field">Mouse action<select id="mouse-action"></select></label></div>
-            <p id="unset-help" class="hint" hidden>This action will be skipped when saving the layer. This does not disable the physical control.</p>
+            <p id="unset-help" class="hint" hidden>This action will be skipped when saving. The physical control keeps its existing assignment.</p>
+            <div class="assignment-preview"><span>ASSIGNED ACTION</span><strong id="assignment-preview">A</strong></div>
             <div id="feature-note" class="feature-note"></div>
-            <div class="assignment-preview"><span>ON THIS CONTROL</span><strong id="assignment-preview">A</strong></div>
-            <button id="save-action" class="primary full">Save Key 1 to keypad <span aria-hidden="true">↗</span></button><p class="hint centered">Edits stay in your draft until you save to the keypad.</p>
+            <div class="editor-save"><button id="save-action" class="primary full" disabled>Save Key 1 to keypad</button><p class="hint centered">Your draft stays local until you save to the keypad.</p></div>
           </section>
         </div>
-        <div class="workflow"><div><span>01</span><strong>Choose a control</strong><p>Three keys. Three knob actions.</p></div><div><span>02</span><strong>Make an assignment</strong><p>A shortcut, a media control, your choice.</p></div><div><span>03</span><strong>Save and go</strong><p>The keypad keeps working with this page closed.</p></div></div>
+        <div class="workspace-note"><svg class="od-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true"><path d="m12 3 8 3v6c0 5-8 9-8 9s-8-4-8-9V6z"/><path d="m8 12 3 3 5-6"/></svg><p>Profiles live in this browser. Settings saved to your keypad keep working after you close Studio.</p></div>
       </section>
-      <section id="view-lighting" class="view" hidden>
-        <div class="page-heading"><div><div class="eyebrow">A LITTLE PERSONALITY</div><h1>Set the mood.</h1><p>Connect your keypad to see its available lighting effects.</p></div><span class="version-tag">LIGHT / --</span></div>
-        <div id="lighting-connect" class="panel" role="status"><h2>Connect to choose an effect</h2><p>Studio shows the lighting modes supported by the detected firmware. Selecting an effect never changes the keypad until you save it.</p></div>
-        <div id="stock-lighting-options" class="lighting-options">
-          <button class="light-card" data-mode="0" aria-pressed="false"><div class="light-demo off" aria-hidden="true"><i></i><i></i><i></i></div><span class="eyebrow">MODE 0</span><h2>Lights out</h2><p>A clean, distraction-free desk.<br>All LEDs off.</p></button>
-          <button class="light-card" data-mode="1" aria-pressed="false"><div class="light-demo breathe" aria-hidden="true"><i></i><i></i><i></i></div><span class="eyebrow">MODE 1</span><h2>Last-key breathing</h2><p>The last key you press pulses gently. Each press changes its color.</p><small>Knob push stops the effect.</small></button>
-          <button class="light-card" data-mode="2" aria-pressed="false"><div class="light-demo chase" aria-hidden="true"><i></i><i></i><i></i></div><span class="eyebrow">MODE 2</span><h2>Color chase</h2><p>Light travels across all three keys, changing color on every pass.</p><small>Knob actions leave the effect running.</small></button>
+      <section id="view-lighting" class="view" aria-labelledby="lighting-heading" hidden>
+        <div class="page-heading"><div><h1 id="lighting-heading">Lighting</h1><p>Connect your keypad to see its available lighting effects.</p></div><span class="version-tag">LIGHT / --</span></div>
+        <div id="lighting-connect" class="panel" role="status"><div class="empty-mark"><svg class="od-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true"><path d="M9 18h6m-5 3h4M8 14a6 6 0 1 1 8 0c-1 1-1 2-1 2H9s0-1-1-2"/></svg></div><div><h2>Connect your keypad to configure lighting</h2><p>Use Connect keypad above to see the effects your firmware supports. Select an effect, then save it to your keypad. Connecting alone never changes your settings.</p></div></div>
+        <div id="stock-lighting-options" class="lighting-options" hidden>
+          <button class="light-card" data-mode="0" aria-pressed="false"><div class="light-demo off" aria-hidden="true"><i></i><i></i><i></i></div><span class="eyebrow">Mode 00</span><h2>Lights out</h2><p>All LEDs off.</p></button>
+          <button class="light-card" data-mode="1" aria-pressed="false"><div class="light-demo breathe" aria-hidden="true"><i></i><i></i><i></i></div><span class="eyebrow">Mode 01</span><h2>Last-key breathing</h2><p>The last key you press pulses gently. Each press changes its color.</p><small>Knob push stops the effect.</small></button>
+          <button class="light-card" data-mode="2" aria-pressed="false"><div class="light-demo chase" aria-hidden="true"><i></i><i></i><i></i></div><span class="eyebrow">Mode 02</span><h2>Color chase</h2><p>Light travels across all three keys, changing color on every pass.</p><small>Knob actions leave the effect running.</small></button>
         </div>
         <div id="open-lighting-options" class="lighting-options" hidden></div>
-        <div id="open-lighting-controls" class="panel open-lighting-controls" hidden><label>Brightness <strong id="open-brightness-value">48 / 255</strong><input id="open-brightness" type="range" min="0" max="255" value="48"></label><div class="open-colors"><label>Key 1 <input id="open-color-0" type="color" value="#0078ff"></label><label>Key 2 <input id="open-color-1" type="color" value="#b400c8"></label><label>Key 3 <input id="open-color-2" type="color" value="#ff4600"></label></div><p class="hint">Colors are the palette for static, breathing, wave, comet, reactive, ripple, starlight, and alternating effects.</p></div>
-        <div id="lighting-footer" class="panel lighting-footer" hidden><div><h2 id="lighting-selection">Color chase selected</h2><p id="lighting-description">Illustrations are previews. The keypad chooses the colors and timing.</p></div><button id="save-lighting" class="primary">Save lighting to keypad</button></div>
-        <p id="lighting-help" class="hint">Stock firmware offers three fixed modes and does not expose custom colors, brightness or speed. Your selected mode is a draft until saved.</p>
+        <div id="open-lighting-controls" class="panel open-lighting-controls" hidden><label>Brightness <strong id="open-brightness-value">48 / 255</strong><input id="open-brightness" type="range" min="0" max="255" value="48"></label><div class="open-colors"><label>Key 1 <input id="open-color-0" type="color" value="#0078ff"></label><label>Key 2 <input id="open-color-1" type="color" value="#b400c8"></label><label>Key 3 <input id="open-color-2" type="color" value="#ff4600"></label></div><p class="hint">These colors set the palette for static, breathing, wave, comet, reactive, ripple, starlight, and alternating effects.</p></div>
+        <div id="lighting-footer" class="panel lighting-footer" hidden><div><h2 id="lighting-selection">Color chase selected</h2><p id="lighting-description">The keypad chooses the colors and timing.</p></div><button id="save-lighting" class="primary">Save lighting to keypad</button></div>
+        <p id="lighting-help" class="hint"></p>
       </section>
-      <section id="view-profiles" class="view" hidden>
-        <div class="page-heading"><div><div class="eyebrow">YOUR OWN WAY OF WORKING</div><h1>A setup for every flow.</h1><p>Save your drafts, switch projects, and keep a portable copy.</p></div></div>
-        <div class="profiles-grid"><section class="panel"><h2>Profile library</h2><label class="field">Current profile<select id="profile-select"></select></label><label class="field">Profile name<input id="profile-name" maxlength="60" autocomplete="off"></label><div class="actions"><button id="rename-profile" class="secondary">Rename</button><button id="duplicate-profile" class="secondary">Duplicate</button><button id="new-profile" class="secondary">New blank profile</button><button id="delete-profile" class="quiet">Delete profile</button></div><div id="delete-confirm" class="delete-confirm" hidden><p>Delete <strong id="delete-confirm-name"></strong> from this browser? This does not change the keypad.</p><div class="actions"><button id="confirm-delete" class="secondary">Yes, delete</button><button id="cancel-delete" class="quiet">Cancel</button></div></div><hr><div class="actions"><button id="export-profile" class="primary">Export profile</button><button id="import-profile" class="secondary">Import profile</button><input type="file" id="profile-file" accept=".json,application/json" hidden></div><p class="hint">Profiles are browser-local drafts. Switching or exporting never changes the keypad; use a Save button to apply settings. Exports are not firmware backups.</p></section>
-        <section class="panel"><span class="eyebrow">START SOMEWHERE GOOD</span><h2>Starter layouts</h2><p class="subtle">Click once to create a starter profile; click again to reopen it. Your edits stay intact.</p><div class="preset-list"><button data-preset="editing"><strong>Everyday editing <span>↗</span></strong><small>Copy · Paste · Undo / scroll & middle click</small></button><button data-preset="media"><strong>Media desk <span>↗</span></strong><small>Previous · Play/pause · Next / volume & mute</small></button><button data-preset="letters"><strong>Basic keys <span>↗</span></strong><small>A · B · C / D · E · F</small></button></div><p id="preset-note" class="feature-note">Starter layouts are drafts. Connect a keypad to see which actions its firmware supports.</p></section></div>
+      <section id="view-profiles" class="view" aria-labelledby="profiles-heading" hidden>
+        <div class="page-heading"><div><h1 id="profiles-heading">Profiles</h1><p>Create, manage, and switch between local configurations.</p></div><span class="version-tag">BROWSER-LOCAL LIBRARY</span></div>
+        <div class="profiles-grid">
+          <section class="panel" aria-labelledby="library-heading"><h2 id="library-heading">Profile library</h2><p class="subtle">Switch drafts without changing your keypad.</p><label class="field">Current profile<select id="profile-select"></select></label><p id="profile-full-name" class="profile-full-name" hidden></p><label class="field">Profile name<input id="profile-name" maxlength="60" autocomplete="off" aria-describedby="profile-name-help"></label><p class="hint" id="profile-name-help">Use a name between 1 and 60 characters.</p><div class="actions"><button id="rename-profile" class="secondary">Rename</button><button id="duplicate-profile" class="secondary">Duplicate</button><button id="new-profile" class="secondary">New blank profile</button><button id="delete-profile" class="quiet">Delete profile</button></div><div id="delete-confirm" class="delete-confirm" hidden><p>Delete <strong id="delete-confirm-name"></strong> from this browser? This does not change the keypad.</p><div class="actions"><button id="confirm-delete" class="secondary">Delete profile</button><button id="cancel-delete" class="quiet">Keep profile</button></div></div><hr><h3>Import and export</h3><div class="actions"><button id="export-profile" class="secondary">Export profile</button><button id="import-profile" class="secondary">Import profile</button><input type="file" id="profile-file" accept=".json,application/json" hidden></div><p class="hint">Profiles are local drafts, not firmware backups. Use a Save button in Configure or Lighting to apply settings to your keypad.</p></section>
+          <section class="panel" aria-labelledby="starters-heading"><h2 id="starters-heading">Starter layouts</h2><p class="subtle">Create a layout once. Reopen it anytime without losing your edits.</p><div class="preset-list"><button data-preset="editing"><strong>Everyday editing <span>Create</span></strong><small>Copy · Paste · Undo<br>Scroll and middle click on the knob</small></button><button data-preset="media"><strong>Media desk <span>Create</span></strong><small>Previous · Play/pause · Next<br>Volume and mute on the knob</small></button><button data-preset="letters"><strong>Basic keys <span>Open</span></strong><small>A · B · C<br>D · E · F on the knob</small></button></div><p id="preset-note" class="feature-note">Connect a keypad to see which actions its firmware supports.</p></section>
+        </div>
       </section>
-      <section id="view-test" class="view" hidden>
-        <div class="page-heading"><div><div class="eyebrow">TRUST, THEN VERIFY</div><h1>Test your keypad.</h1><p>Try your keys here after saving an assignment.</p></div></div>
-        <section class="panel"><div id="test-pad" tabindex="0" role="region" aria-label="Keypad input test area"><span class="eyebrow">CLICK HERE, THEN USE YOUR KEYPAD</span><strong id="test-value">Ready when you are.</strong><span id="test-detail">Key presses and wheel movements appear here.</span></div><div id="test-history" class="test-history" aria-live="polite"></div><p class="hint">Only input in this test area is logged. Any keyboard can produce these events; your operating system may handle media keys or reserved shortcuts before the browser sees them. Tab leaves the test area.</p></section>
-        <details class="panel diagnostics"><summary>Advanced diagnostics</summary><p class="hint">Only share an exported log after reviewing it. It may contain device details and key-test activity.</p><p id="device-summary" class="subtle">Connect your keypad to inspect its USB interface.</p><div class="actions"><button id="export-diagnostics" class="secondary small">Export diagnostics</button><button id="clear-log" class="quiet small">Clear log</button></div><pre id="activity-log">No activity yet.</pre><details><summary>Technical device details</summary><pre id="descriptors">No device selected.</pre></details></details>
+      <section id="view-test" class="view" aria-labelledby="test-heading" hidden>
+        <div class="page-heading"><div><h1 id="test-heading">Test keypad</h1><p>Try your assignments after saving them to the keypad.</p></div><span class="version-tag">KEYS / CLICKS / SCROLL</span></div>
+        <section class="panel" aria-label="Input tester"><div id="test-pad" tabindex="0" role="region" aria-label="Keypad input test area" aria-describedby="test-help"><svg class="od-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true"><rect x="2" y="5" width="20" height="14" rx="3"/><path d="M6 9h.01M10 9h.01M14 9h.01M18 9h.01M6 12h.01M10 12h.01M14 12h.01M18 12h.01M8 15h8"/></svg><span class="eyebrow">Click here, then use your keypad</span><strong id="test-value">Waiting for input</strong><span id="test-detail">Key presses and wheel movements appear here.</span></div><div id="test-history" class="test-history" aria-live="polite"></div><p id="test-help" class="hint">Only input inside this area is logged. Any keyboard can produce these events. Your operating system may handle media keys or reserved shortcuts before the browser sees them. Press Tab to leave.</p></section>
+        <details class="panel diagnostics"><summary>Advanced diagnostics</summary><p class="hint">Review a log before sharing it. It may contain device details and key-test activity.</p><p id="device-summary" class="subtle">Connect your keypad to inspect its USB interface.</p><div class="actions"><button id="export-diagnostics" class="secondary small">Export diagnostics</button><button id="clear-log" class="quiet small">Clear log</button></div><pre id="activity-log">No activity yet.</pre><details><summary>Technical device details</summary><pre id="descriptors">No device selected.</pre></details></details>
       </section>
-      <footer><span>KEYPAD STUDIO <b>·</b> Made for your mini keypad</span><span>Local profiles. Direct USB. No vendor software.</span></footer>
+      <footer><span>Keypad Studio</span></footer>
     </main>
   </div>
 </div>
-<noscript>This app needs JavaScript for its editor and WebHID connection.</noscript>
+<noscript>Keypad Studio needs JavaScript to edit profiles and connect to your keypad.</noscript>
 </body>
 </html>

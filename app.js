@@ -71,6 +71,9 @@ function populateSelect(select, choices) {
 function renderProfiles() {
   populateSelect(element('profile-select'), profiles.map(profile => [profile.id, profile.name]));
   element('profile-select').value = currentId;
+  element('profile-select').title = currentProfile().name;
+  element('profile-full-name').textContent = currentProfile().name;
+  element('profile-full-name').hidden = currentProfile().name.length <= 30;
   element('profile-name').value = currentProfile().name;
   element('profile-caption').textContent = currentProfile().name;
   all('[data-preset]').forEach(button => {
@@ -107,7 +110,7 @@ function renderSummary() {
     : action.type === 'unset' ? 'Existing device settings are left alone for this control.' : basicStock ? 'Plain-key commands were tested with A–F on our reference board; verify this key on yours.' : advanced ? 'Experimental stock command: test it carefully and keep your existing settings recorded.' : 'This stock action is unverified. Use Show experimental options to save it.';
   const sent = sentAssignments.get(`${layer}:${target}`) === JSON.stringify(currentAction());
   element('write-state').textContent = sent ? 'Sent this session' : 'Draft';
-  element('save-action').textContent = `Save ${currentTarget().name} to keypad ↗`;
+  element('save-action').textContent = `Save ${currentTarget().name} to keypad`;
   element('save-layer').textContent = `Save ${count} configured action${count === 1 ? '' : 's'}`;
   updateControls();
 }
@@ -136,7 +139,11 @@ function renderSteps() {
       row.append(remove);
     }
     const modifiers = node('div', undefined, 'modifiers');
-    MODIFIERS.forEach(([bit, name]) => {
+    const extraModifiers = node('details', undefined, 'extra-modifiers');
+    extraModifiers.open = Boolean(step.modifiers & 240);
+    extraModifiers.append(node('summary', 'Right-side modifiers'));
+    const extraGroup = node('div', undefined, 'modifiers');
+    MODIFIERS.forEach(([bit, name], modifierIndex) => {
       const label = node('label', undefined, 'modifier');
       const checkbox = node('input');
       checkbox.type = 'checkbox'; checkbox.checked = Boolean(step.modifiers & bit);
@@ -148,9 +155,11 @@ function renderSteps() {
         if (action.type === 'modifier') action.modifiers = next;
         edited();
       };
-      label.append(checkbox, node('span', name)); modifiers.append(label);
+      label.append(checkbox, node('span', name));
+      (modifierIndex < 4 ? modifiers : extraGroup).append(label);
     });
-    wrapper.append(row, modifiers); element('key-steps').append(wrapper);
+    extraModifiers.append(extraGroup);
+    wrapper.append(row, modifiers, extraModifiers); element('key-steps').append(wrapper);
   });
 }
 function stopRecording() {
@@ -254,6 +263,10 @@ function changeView(view) {
   all('.view').forEach(section => { section.hidden = section.id !== `view-${view}`; });
   all('[data-view]').forEach(button => { button.classList.toggle('active', button.dataset.view === view); button.setAttribute('aria-current', button.dataset.view === view ? 'page' : 'false'); });
   element('view-name').textContent = {configure: 'Configure', lighting: 'Lighting', profiles: 'Profiles', test: 'Test keypad'}[view];
+  const heading = element(`view-${view}`).querySelector('h1');
+  heading.tabIndex = -1;
+  heading.focus({preventScroll: true});
+  heading.scrollIntoView({block: 'start', behavior: 'instant'});
 }
 const flatten = collections => collections.flatMap(collection => [collection, ...flatten(collection.children || [])]);
 function candidate(devices) {
@@ -341,7 +354,7 @@ async function saveMappings(selectedTargets) {
       log(`Layer ${selectedLayer}, ${job.name}: ${describe(job.action)} — assignment and save sent.`);
       completed++;
     }
-    notice(`Sent ${completed} assignment${completed === 1 ? '' : 's'} to layer ${selectedLayer}. Try ${completed === 1 ? jobs[0].name : 'each control'} in Test & diagnostics to verify. The device does not provide readback confirmation.`);
+    notice(`Sent ${completed} assignment${completed === 1 ? '' : 's'} to layer ${selectedLayer}. Try ${completed === 1 ? jobs[0].name : 'each control'} in Test keypad to verify. The device does not provide readback confirmation.`);
   } catch (error) { throw new Error(`${completed} of ${jobs.length} assignments sent before an error. The interrupted assignment may be partially changed. Reconnect and save the desired assignments again. ${error.message}`); }
 }
 function download(filename, content) {
@@ -387,7 +400,25 @@ TARGETS.forEach(item => {
 populateSelect(element('media-action'), Object.entries(MEDIA).map(([key, value]) => [key, value.name]));
 populateSelect(element('mouse-action'), Object.entries(MOUSE).map(([key, value]) => [key, value.name]));
 all('[data-view]').forEach(button => { button.onclick = () => changeView(button.dataset.view); });
-all('[data-target]').forEach(button => { button.onclick = () => { target = Number(button.dataset.target); renderEditor(); }; });
+let assignmentTrigger = null;
+all('[data-target]').forEach(button => { button.onclick = () => {
+  assignmentTrigger = button;
+  target = Number(button.dataset.target);
+  renderEditor();
+  if (window.matchMedia('(max-width: 1199px)').matches) {
+    const editor = element('editor-title').closest('.editor');
+    element('editor-title').tabIndex = -1;
+    element('editor-title').focus({preventScroll: true});
+    editor.scrollIntoView({block: 'start', behavior: 'instant'});
+  }
+}; });
+element('back-to-keypad').onclick = () => {
+  const control = assignmentTrigger?.isConnected && Number(assignmentTrigger.dataset.target) === target
+    ? assignmentTrigger
+    : document.querySelector(`.keycap[data-target="${target}"]`) || element('device-heading');
+  control.focus({preventScroll: true});
+  control.scrollIntoView({block: 'center', behavior: 'instant'});
+};
 element('layer').onchange = () => { layer = Number(element('layer').value); renderAll(); };
 element('advanced-toggle').onclick = () => { advanced = !advanced; if (!advanced) layer = 1; renderAll(); };
 element('action-type').onchange = () => {
@@ -456,16 +487,20 @@ all('[data-preset]').forEach(button => { button.onclick = () => operation(async 
 element('delete-profile').onclick = () => {
   element('delete-confirm-name').textContent = currentProfile().name;
   element('delete-confirm').hidden = false;
+  element('cancel-delete').focus();
 };
-element('cancel-delete').onclick = () => { element('delete-confirm').hidden = true; };
-element('confirm-delete').onclick = () => operation(async () => {
-  if (profiles.length === 1) throw new Error('Keep at least one profile in the library.');
-  const removed = currentProfile().name;
-  profiles = profiles.filter(profile => profile.id !== currentId);
-  currentId = profiles[0].id; layer = 1; target = 1;
-  element('delete-confirm').hidden = true;
-  persist(); renderAll(); notice(`Deleted "${removed}" from this browser. The keypad was not changed.`);
-});
+element('cancel-delete').onclick = () => { element('delete-confirm').hidden = true; element('delete-profile').focus(); };
+element('confirm-delete').onclick = async () => {
+  await operation(async () => {
+    if (profiles.length === 1) throw new Error('Keep at least one profile in the library.');
+    const removed = currentProfile().name;
+    profiles = profiles.filter(profile => profile.id !== currentId);
+    currentId = profiles[0].id; layer = 1; target = 1;
+    element('delete-confirm').hidden = true;
+    persist(); renderAll(); notice(`Deleted "${removed}" from this browser. The keypad was not changed.`);
+  });
+  element('profile-select').focus();
+};
 element('export-profile').onclick = () => download('keypad-profile.json', {format: 'keypad-studio', version: 1, profile: validateProfile(currentProfile())});
 element('import-profile').onclick = () => element('profile-file').click();
 element('profile-file').onchange = () => operation(async () => {
